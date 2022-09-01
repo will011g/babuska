@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main id="holder"></main>
+    <template>
+      <article>
+        <img src="" alt="" />
+        <h2 class="navn"></h2>
+        <h2 class="efternavn"></h2>
+        <p class="titel"></p>
+        <p class="fødselsdag"></p>
+        <p class="email"></p>
+      </article>
+    </template>
+    <script>
+      const endpoint = "https://babushka-dd8a.restdb.io/rest/menu";
+      const mereinfo = {
+        headers: {
+          "x-apikey": "600ec2fb1346a1524ff12de4",
+        },
+      };
+      async function hentData() {
+        const response = await fetch(endpoint, mereinfo);
+        const json = await response.json();
+        vis(json);
+      }
+
+      const holder = document.querySelector("#holder");
+      const skabelon = document.querySelector("template").content;
+
+      function vis(json) {
+        console.log(json);
+        json.forEach((person) => {
+          const klon = skabelon.cloneNode(true);
+          klon.querySelector("img").src = "faces/" + person.billede;
+          klon.querySelector(".navn").textContent = person.fornavn;
+          klon.querySelector(".efternavn").textContent = person.efternavn;
+          klon.querySelector(".email").textContent = person.email;
+          //   klon.querySelector(".titel").textContent = person.titel;
+          klon.querySelector(".fødselsdag").textContent = person.fødselsdag.slice(0, 10);
+          holder.appendChild(klon);
+        });
+      }
+      hentData();
+    </script>
+  </body>
+</html>
